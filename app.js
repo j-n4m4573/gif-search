@@ -5,39 +5,49 @@ var express = require('express')
 var app = express()
 var exphbs = require('express-handlebars');
 var http = require('http');
+var giphy = require('giphy-api')();
 
 
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
+app.get('/', function(req, res) {
 
-app.get('/', function (req, res) {
-    console.log(req.query.term)
-    var queryString = req.query.term
-    // Encoding query to remove white spaces and restricted characters
+    var queryString = req.query.term || 'Chihuahua'
     var term = encodeURIComponent(queryString)
-    // Put the search term into the gify api search url
-    var url = 'http://api.giphy.com/v1/gifs/search?q=' + term + '&api_key=dc6zaTOxFJmzC'
 
-    http.get(url, function(response) {
-        // set encoding of response to utf8
-        response.setEncoding('utf8');
-        var body = '';
-
-        response.on('data', function(d) {
-            // continuously update the stream with data from giphy
-            body += d;
-        });
-
-        response.on('end', function() {
-            // when data is fully recieved parse into json
-            var parsed = JSON.parse(body);
-            // Render the home template and pass the gif data into the template
-            res.render('home', {gifs: parsed.data})
-        })
-    })
+    giphy.search(term, function (err, response) {
+        res.render('home', {gifs: response.data})
+    });
 });
+
+// app.get('/', function (req, res) {
+//     console.log(req.query.term)
+//     var queryString = req.query.term
+//     // Encoding query to remove white spaces and restricted characters
+//     var term = encodeURIComponent(queryString)
+//     // Put the search term into the gify api search url
+//     var url = 'http://api.giphy.com/v1/gifs/search?q=' + term + '&api_key=dc6zaTOxFJmzC'
+//
+//     http.get(url, function(response) {
+//         // set encoding of response to utf8
+//         response.setEncoding('utf8');
+//         var body = '';
+//
+//         response.on('data', function(d) {
+//             // continuously update the stream with data from giphy
+//             body += d;
+//         });
+//
+//         response.on('end', function() {
+//             // when data is fully recieved parse into json
+//             var parsed = JSON.parse(body);
+//             // Render the home template and pass the gif data into the template
+//             res.render('home', {gifs: parsed.data})
+//         })
+//     })
+// });
 
 app.get('/hello-gif', function(req, res) {
     var gifUrl = 'http://media2.giphy.com/media/gYBVM1igrlzH2/giphy.gif'
