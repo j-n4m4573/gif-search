@@ -21,7 +21,10 @@ input {
 }
 
 form {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
 }
 
 button {
@@ -38,6 +41,6 @@ button {
     cursor: pointer;
     transition: all 0.3s ease;
     outline: none;
-    border: 1px solid #FE7880;
-    color: #FE7880;
+    border: 1px solid #005A9C;
+    color: #005A9C;
 }
